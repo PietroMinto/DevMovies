@@ -1,4 +1,4 @@
-import api from "../../services/api";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
   Background,
@@ -11,6 +11,14 @@ import Button from "../../components/Button";
 import Slider from "../../components/Slider";
 import { getImages } from "../../utils/getImages";
 import Modal from "../../components/Modal";
+import {
+  getMovies,
+  getPopularSeries,
+  getTopMovies,
+  getTopPeople,
+  getTopSeries,
+  getUpcomingMovies,
+} from "../../services/getData";
 
 function Home() {
   const [showModal, setShowModal] = useState(false);
@@ -20,62 +28,19 @@ function Home() {
   const [popularSeries, setPopularSeries] = useState();
   const [topPeople, setTopPeople] = useState();
   const [movieUpcoming, setMovieUpcoming] = useState();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    async function getMovies() {
-      const {
-        data: { results },
-      } = await api.get("/movie/popular");
-
-      setMovie(results[0]);
+    async function getAllData() {
+      setMovie(await getMovies());
+      setTopMovies(await getTopMovies());
+      setTopSeries(await getTopSeries());
+      setPopularSeries(await getPopularSeries());
+      setTopPeople(await getTopPeople());
+      setMovieUpcoming(await getUpcomingMovies());
     }
 
-    async function getTopMovies() {
-      const {
-        data: { results },
-      } = await api.get("/movie/top_rated");
-
-      setTopMovies(results);
-    }
-
-    async function getTopSeries() {
-      const {
-        data: { results },
-      } = await api.get("/tv/top_rated");
-
-      setTopSeries(results);
-    }
-
-    async function getPopularSeries() {
-      const {
-        data: { results },
-      } = await api.get("/tv/popular");
-
-      setPopularSeries(results);
-    }
-
-    async function getTopPeople() {
-      const {
-        data: { results },
-      } = await api.get("/person/popular");
-
-      setTopPeople(results);
-    }
-
-    async function getMoviesUpcoming() {
-      const {
-        data: { results },
-      } = await api.get("/movie/upcoming");
-
-      setMovieUpcoming(results);
-    }
-
-    getMovies();
-    getTopMovies();
-    getTopSeries();
-    getPopularSeries();
-    getTopPeople();
-    getMoviesUpcoming();
+    getAllData();
   }, []);
 
   return (
@@ -90,7 +55,12 @@ function Home() {
               <h1>{movie.title}</h1>
               <p>{movie.overview}</p>
               <ContainerButtons>
-                <Button red={true}>Assista Agora</Button>
+                <Button
+                  onClick={() => navigate(`/detalhe/${movie.id}`)}
+                  red={true}
+                >
+                  Assista Agora
+                </Button>
                 <Button onClick={() => setShowModal(true)} red={false}>
                   Assista o Trailer
                 </Button>

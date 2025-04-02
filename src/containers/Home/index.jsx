@@ -32,12 +32,30 @@ function Home() {
 
   useEffect(() => {
     async function getAllData() {
-      setMovie(await getMovies());
-      setTopMovies(await getTopMovies());
-      setTopSeries(await getTopSeries());
-      setPopularSeries(await getPopularSeries());
-      setTopPeople(await getTopPeople());
-      setMovieUpcoming(await getUpcomingMovies());
+      Promise.all([
+        getMovies(),
+        getTopMovies(),
+        getTopSeries(),
+        getPopularSeries(),
+        getTopPeople(),
+        getUpcomingMovies(),
+      ]).then(
+        ([
+          movie,
+          topMovies,
+          topSeries,
+          popularSeries,
+          topPeople,
+          movieUpcoming,
+        ]) => {
+          setMovie(movie);
+          setTopMovies(topMovies);
+          setTopSeries(topSeries);
+          setPopularSeries(popularSeries);
+          setTopPeople(topPeople);
+          setMovieUpcoming(movieUpcoming);
+        }
+      );
     }
 
     getAllData();

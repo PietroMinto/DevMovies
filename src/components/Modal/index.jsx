@@ -12,14 +12,13 @@ function Modal({ movieId, setShowModal }) {
 
     getMovies();
   }, []);
-
   return (
     <Background onClick={() => setShowModal(false)}>
       {movie && (
         <Container>
           <button onClick={() => setShowModal(false)}>X</button>
           <iframe
-            src={`https://www.youtube.com/embed/${movie.key}`}
+            src={`https://www.youtube.com/embed/${movie[0].key}`}
             title="YouTube video player"
             height="500px"
             width="100%"

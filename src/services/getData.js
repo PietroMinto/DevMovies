@@ -77,3 +77,11 @@ export async function getMovieById(movieId) {
 
   return data;
 }
+
+export async function getMovieNewPlaying() {
+  const {
+    data: { results },
+  } = await api.get(`movie/now_playing`);
+
+  return results;
+}
